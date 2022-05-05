@@ -16,20 +16,22 @@ sudo apt-mark hold snapd
 - How to remove MiniDLNA
 sudo apt-get remove --auto-remove minidlna
 
-Stop VLC
+- Stop VLC or other unresponsive apps or background processes:
 killall -s 9 vlc
+killall -s 9 obs
 
-Get current kernel version
+- Get current kernel version
 Start an LXTerminal session enter:
 uname -r
 
-View installed kernels
+View installed kernels:
 dpkg -l | grep linux-image-
 
-Remove al unused kernels
+Remove all unused kernels:
 dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d' | xargs sudo apt-get -y purge
 sudo dpkg --configure -a
 sudo update-grub
 
-Forced upgrade: sudo do-release-upgrade -d
+- Forced upgrade: 
+sudo do-release-upgrade -d
 sudo do-release-upgrade -m desktop
