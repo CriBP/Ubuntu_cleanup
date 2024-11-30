@@ -1,9 +1,11 @@
 #!/bin/bash
 ###############################################################################
 # This script cleans-up Ubuntu installation
-# I got some inspiration from https://github.com/jabarihunt/Ubuntu-Cleanup-Script/blob/master/clean.sh
-# Also used a lot of research to make the installation lighter and safer
+# Used a lot of research to make the installation lighter and safer
 ###############################################################################
+
+# Install language support
+sudo apt install $(check-language-support)
 
 # Remove SWAP File on PC's with 4GB+ RAM
 sudo swapoff /swap.img
@@ -12,6 +14,64 @@ sudo swapoff -a
 
 # Then comment out or delete the following line in /etc/fstab:
 # /swap.img      none    swap    sw      0       0
+
+# Change to black backgound:
+gsettings get org.gnome.desktop.background picture-uri
+gsettings set org.gnome.desktop.background picture-uri ""
+gsettings get org.gnome.desktop.background picture-uri-dark
+gsettings set org.gnome.desktop.background picture-uri-dark ""
+gsettings get org.gnome.desktop.background primary-color
+gsettings set org.gnome.desktop.background primary-color '#000000'
+gsettings get org.gnome.desktop.background show-desktop-icons
+gsettings set org.gnome.desktop.background show-desktop-icons true
+
+# Disable Event Sounds
+sudo rmmod pcspkr ; echo "blacklist pcspkr" >>/etc/modprobe.d/blacklist.conf
+gsettings get org.gnome.desktop.sound allow-volume-above-100-percent
+gsettings set org.gnome.desktop.sound allow-volume-above-100-percent true
+gsettings get org.gnome.desktop.sound event-sounds
+gsettings set org.gnome.desktop.sound event-sounds false
+gsettings get org.gnome.desktop.sound input-feedback-sounds
+gsettings set org.gnome.desktop.sound input-feedback-sounds false
+gsettings get org.gnome.desktop.sound event-sounds
+gsettings set org.gnome.desktop.sound event-sounds false
+gsettings get com.ubuntu.sound allow-amplified-volume
+gsettings set com.ubuntu.sound allow-amplified-volume true
+
+# Add welcome message (comment to disable)
+gsettings get org.gnome.login-screen banner-message-enable
+gsettings set org.gnome.login-screen banner-message-enable true
+gsettings get org.gnome.login-screen banner-message-text
+gsettings set org.gnome.login-screen banner-message-text "Welcome to Ubuntu"
+
+# Privacy Settings: gsettings list-keys org.gnome.desktop.privacy 
+gsettings get org.gnome.desktop.privacy disable-camera
+# gsettings set org.gnome.desktop.privacy disable-camera true
+gsettings get org.gnome.desktop.privacy disable-microphone
+# gsettings set org.gnome.desktop.privacy disable-microphone true
+gsettings get org.gnome.desktop.privacy disable-sound-output
+# gsettings set org.gnome.desktop.privacy disable-sound-output true
+gsettings get org.gnome.desktop.privacy hide-identity
+gsettings set org.gnome.desktop.privacy hide-identity true
+gsettings get org.gnome.desktop.privacy remember-app-usage
+gsettings set org.gnome.desktop.privacy remember-app-usage false
+gsettings get org.gnome.desktop.privacy remember-recent-files
+# gsettings set org.gnome.desktop.privacy remember-recent-files false
+gsettings get org.gnome.desktop.privacy remove-old-temp-files
+gsettings set org.gnome.desktop.privacy remove-old-temp-files true
+gsettings get org.gnome.desktop.privacy remove-old-trash-files
+gsettings set org.gnome.desktop.privacy remove-old-trash-files true
+gsettings get org.gnome.desktop.privacy report-technical-problems
+gsettings set org.gnome.desktop.privacy report-technical-problems false
+gsettings get org.gnome.desktop.privacy send-software-usage-stats
+gsettings set org.gnome.desktop.privacy send-software-usage-stats false
+gsettings get org.gnome.desktop.privacy show-full-name-in-top-bar
+gsettings set org.gnome.desktop.privacy show-full-name-in-top-bar true
+gsettings get org.gnome.desktop.privacy usb-protection
+gsettings set org.gnome.desktop.privacy usb-protection true
+
+# Disable Rastersoft Ding
+gnome-extensions disable ding@rastersoft.com
 
 # Remove apt / apt-get files
 sudo apt clean
@@ -64,11 +124,6 @@ sudo rm -rf /var/log/*.1
 sudo rm -rf /tmp/*
 sudo rm -rf /var/tmp/*
 rm -rf ~/.local/share/Trash/* /tmp/*
-
-# Change to black backgound:
-gsettings set org.gnome.desktop.background picture-uri ""
-gsettings set org.gnome.desktop.background picture-uri-dark ""
-gsettings set org.gnome.desktop.background primary-color '#000000'
 
 # How to Remove Snap From Ubuntu (Snap seems to be an universal app-store pushed by Canonical without user acknowledge)
 snap list
