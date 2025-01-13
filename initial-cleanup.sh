@@ -35,8 +35,8 @@ sudo swapoff /swap.img
 sudo rm /swap.img
 sudo swapoff -a
 
-echo -e "${Cyan}Then comment out or delete the following line in /etc/fstab:${clear}"
-echo -e "${Cyan}/swap.img      none    swap    sw      0       0 ${clear}"
+echo -e "${Orange}Then comment out or delete the following line in /etc/fstab:"
+echo -e "/swap.img      none    swap    sw      0       0 ${clear}"
 
 echo -e "${Cyan}Change to black backgound:${clear}"
 gsettings get org.gnome.desktop.background picture-uri
@@ -69,21 +69,17 @@ gsettings set org.gnome.login-screen banner-message-text "Welcome to Ubuntu"
 
 echo -e "${Cyan}Privacy Settings: gsettings list-keys org.gnome.desktop.privacy${clear}"
 gsettings get org.gnome.desktop.privacy disable-camera
-
-echo -e "${Cyan}gsettings set org.gnome.desktop.privacy disable-camera true${clear}"
+gsettings set org.gnome.desktop.privacy disable-camera true
 gsettings get org.gnome.desktop.privacy disable-microphone
-
-echo -e "${Cyan}gsettings set org.gnome.desktop.privacy disable-microphone true${clear}"
+gsettings set org.gnome.desktop.privacy disable-microphone true
 gsettings get org.gnome.desktop.privacy disable-sound-output
-
-echo -e "${Cyan}gsettings set org.gnome.desktop.privacy disable-sound-output true${clear}"
+# gsettings set org.gnome.desktop.privacy disable-sound-output true
 gsettings get org.gnome.desktop.privacy hide-identity
 gsettings set org.gnome.desktop.privacy hide-identity true
 gsettings get org.gnome.desktop.privacy remember-app-usage
 gsettings set org.gnome.desktop.privacy remember-app-usage false
 gsettings get org.gnome.desktop.privacy remember-recent-files
-
-echo -e "${Cyan}gsettings set org.gnome.desktop.privacy remember-recent-files false${clear}"
+# gsettings set org.gnome.desktop.privacy remember-recent-files false
 gsettings get org.gnome.desktop.privacy remove-old-temp-files
 gsettings set org.gnome.desktop.privacy remove-old-temp-files true
 gsettings get org.gnome.desktop.privacy remove-old-trash-files
@@ -162,7 +158,7 @@ sudo rm -rf /tmp/*
 sudo rm -rf /var/tmp/*
 rm -rf ~/.local/share/Trash/* /tmp/*
 
-echo -e "${Cyan}How to Remove Snap From Ubuntu (Snap seems to be an universal app-store pushed by Canonical without user acknowledge)${clear}"
+echo -e "${Red}How to Remove Snap From Ubuntu (Snap seems to be an universal app-store pushed by Canonical without user acknowledge)${clear}"
 snap list
 sudo snap remove --purge package-name
 sudo rm -rf /var/cache/snapd/
@@ -170,7 +166,7 @@ sudo apt autoremove --purge snapd gnome-software-plugin-snap
 rm -fr ~/snap
 sudo apt-mark hold snapd
 
-echo -e "${Cyan}Install Firefox .deb package for Debian-based distributions (Recommended)${clear}"
+echo -e "${Red}Install Firefox .deb package for Debian-based distributions (Recommended)${clear}"
 echo -e "${Cyan}To install the .deb package through the APT repository, do the following:${clear}"
 echo -e "${Cyan}Create a directory to store APT repository keys if it doesn't exist:${clear}"
 sudo install -d -m 0755 /etc/apt/keyrings
