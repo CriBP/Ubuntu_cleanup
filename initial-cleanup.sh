@@ -96,6 +96,45 @@ gsettings set org.gnome.desktop.privacy usb-protection true
 echo -e "${Cyan}Disable Rastersoft Ding${clear}"
 gnome-extensions disable ding@rastersoft.com
 
+echo -e "${Red}How to Remove Snap From Ubuntu (Snap seems to be an universal app-store pushed by Canonical without user acknowledge)${clear}"
+snap list
+sudo snap remove --purge package-name
+sudo rm -rf /var/cache/snapd/
+sudo apt autoremove --purge snapd gnome-software-plugin-snap
+rm -fr ~/snap
+sudo apt-mark hold snapd
+
+echo -e "${Red}Install Firefox .deb package for Debian-based distributions (Recommended)${clear}"
+echo -e "${Cyan}To install the .deb package through the APT repository, do the following:${clear}"
+echo -e "${Cyan}Create a directory to store APT repository keys if it doesn't exist:${clear}"
+sudo install -d -m 0755 /etc/apt/keyrings
+echo -e "${Cyan}Import the Mozilla APT repository signing key:${clear}"
+wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+echo -e "${Cyan}If you do not have wget installed, you can install it with: sudo apt-get install wget${clear}"
+echo -e "${Cyan}The fingerprint should be 35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3. You may check it with the following command:${clear}"
+gpg -n -q --import --import-options import-show /etc/apt/keyrings/packages.mozilla.org.asc | awk '/pub/{getline; gsub(/^ +| +$/,""); if($0 == "35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3") print "\nThe key fingerprint matches ("$0").\n"; else print "\nVerification failed: the fingerprint ("$0") does not match the expected one.\n"}'
+echo -e "${Cyan}Next, add the Mozilla APT repository to your sources list:${clear}"
+echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null
+echo -e "${Cyan}Configure APT to prioritize packages from the Mozilla repository:${clear}"
+echo '
+Package: *
+Pin: origin packages.mozilla.org
+Pin-Priority: 1000
+
+Package: firefox*
+Pin: release o=Ubuntu
+Pin-Priority: -1' | sudo tee /etc/apt/preferences.d/mozilla
+echo -e "${Cyan}Update your package list, and install the Firefox .deb package:${clear}"
+sudo apt-get update && sudo apt-get install firefox
+echo -e "${Cyan}Data migration: If you were using Snap or Flatpak before, you are required to import your profile:${clear}"
+echo -e "${Cyan}Copy the existing files on your computer. Make sure that all copies of Firefox on your computer are completely closed before doing this:${clear}"
+echo -e "${Cyan}Flatpak:${clear}"
+mkdir -p ~/.mozilla/firefox/ && cp -a ~/.var/app/org.mozilla.firefox/.mozilla/firefox/* ~/.mozilla/firefox/
+echo -e "${Cyan}Snap:${clear}"
+mkdir -p ~/.mozilla/firefox/ && cp -a ~/snap/firefox/common/.mozilla/firefox/* ~/.mozilla/firefox/ 
+echo -e "${Cyan}launch Firefox from the terminal with the command firefox -P. Select your desired profile. After this initial setup, the -P command will no longer be necessary.${clear}"
+firefox -P
+
 echo -e "${Cyan}Remove apt / apt-get files${clear}"
 sudo apt clean
 sudo apt -s clean
@@ -135,7 +174,6 @@ sudo dpkg --configure -a
 sudo update-grub
 
 echo -e "${Cyan}Remove orphaned libraries:${clear}"
-sudo apt-get remove --purge `deborphan`; sudo apt-get autoremove
 sudo deborphan | xargs sudo apt-get -y remove --purge
 
 echo -e "${Cyan}Cleaning unused configurations:${clear}"
@@ -157,42 +195,6 @@ echo -e "${Cyan}Clean temporary files${clear}"
 sudo rm -rf /tmp/*
 sudo rm -rf /var/tmp/*
 rm -rf ~/.local/share/Trash/* /tmp/*
-
-echo -e "${Red}How to Remove Snap From Ubuntu (Snap seems to be an universal app-store pushed by Canonical without user acknowledge)${clear}"
-snap list
-sudo snap remove --purge package-name
-sudo rm -rf /var/cache/snapd/
-sudo apt autoremove --purge snapd gnome-software-plugin-snap
-rm -fr ~/snap
-sudo apt-mark hold snapd
-
-echo -e "${Red}Install Firefox .deb package for Debian-based distributions (Recommended)${clear}"
-echo -e "${Cyan}To install the .deb package through the APT repository, do the following:${clear}"
-echo -e "${Cyan}Create a directory to store APT repository keys if it doesn't exist:${clear}"
-sudo install -d -m 0755 /etc/apt/keyrings
-echo -e "${Cyan}Import the Mozilla APT repository signing key:${clear}"
-wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
-echo -e "${Cyan}If you do not have wget installed, you can install it with: sudo apt-get install wget${clear}"
-echo -e "${Cyan}The fingerprint should be 35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3. You may check it with the following command:${clear}"
-gpg -n -q --import --import-options import-show /etc/apt/keyrings/packages.mozilla.org.asc | awk '/pub/{getline; gsub(/^ +| +$/,""); if($0 == "35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3") print "\nThe key fingerprint matches ("$0").\n"; else print "\nVerification failed: the fingerprint ("$0") does not match the expected one.\n"}'
-echo -e "${Cyan}Next, add the Mozilla APT repository to your sources list:${clear}"
-echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null
-echo -e "${Cyan}Configure APT to prioritize packages from the Mozilla repository:${clear}"
-echo '
-Package: *
-Pin: origin packages.mozilla.org
-Pin-Priority: 1000
-' | sudo tee /etc/apt/preferences.d/mozilla
-echo -e "${Cyan}Update your package list, and install the Firefox .deb package:${clear}"
-sudo apt-get update && sudo apt-get install firefox
-echo -e "${Cyan}Data migration: If you were using Snap or Flatpak before, you are required to import your profile:${clear}"
-echo -e "${Cyan}Copy the existing files on your computer. Make sure that all copies of Firefox on your computer are completely closed before doing this:${clear}"
-echo -e "${Cyan}Flatpak:${clear}"
-mkdir -p ~/.mozilla/firefox/ && cp -a ~/.var/app/org.mozilla.firefox/.mozilla/firefox/* ~/.mozilla/firefox/
-echo -e "${Cyan}Snap:${clear}"
-mkdir -p ~/.mozilla/firefox/ && cp -a ~/snap/firefox/common/.mozilla/firefox/* ~/.mozilla/firefox/ 
-echo -e "${Cyan}launch Firefox from the terminal with the command firefox -P. Select your desired profile. After this initial setup, the -P command will no longer be necessary.${clear}"
-firefox -P
 
 echo -e "${Cyan}To list your partition sizes run:${clear}"
 df -Th | sort
