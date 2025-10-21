@@ -157,9 +157,9 @@ sudo apt-get check
 sudo apt-get -f install
 sudo apt autoremove
 
-echo -e "${Cyan}Forced upgrade:${clear}"
-sudo do-release-upgrade -d
-sudo do-release-upgrade -m desktop
+echo -e "${Cyan}Check for upgrade:${clear}"
+sudo do-release-upgrade -V
+sudo do-release-upgrade -c
 
 echo -e "${Cyan}Get current kernel version - Start an LXTerminal session enter:${clear}"
 uname -r
